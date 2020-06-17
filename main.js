@@ -20,6 +20,38 @@ d3.csv("data/jobs.csv", function(error, data) {
     let height = 1200;
     let width = 1500;
 
+    var tooltip = d3.select("#chart")
+    .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "black")
+      .style("border-radius", "5px")
+      .style("padding", "10px")
+      .style("color", "white")
+
+  // -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
+  var showTooltip = function(d) {
+    tooltip
+      .transition()
+      .duration(200)
+    tooltip
+      .style("opacity", 1)
+      .html(
+          "Occupation: " + d.job +
+          "Peopled employed : " + d.employed + 
+          "Probability of automation : " + d.probability
+      )
+      .style("left", (d3.mouse(this)[0]+30) + "px")
+      .style("top", (d3.mouse(this)[1]+30) + "px")
+  }
+
+  var hideTooltip = function(d) {
+    tooltip
+      .transition()
+      .duration(200)
+      .style("opacity", 0)
+  }
+
     var svg = d3.select("#chart")
         .append("svg")
         .attr("height", height)
@@ -38,7 +70,10 @@ d3.csv("data/jobs.csv", function(error, data) {
         })
         .attr("fill", "#eceaea")
         .attr("stroke", "grey")
-
+        // -3- Trigger the functions for hover
+        .on("mouseover", showTooltip )
+        // .on("mousemove", moveTooltip )
+        .on("mouseleave", hideTooltip )
     // the simulation is a collection of forces about where we want our circles to go and how we want them to interact
     const simulation = d3.forceSimulation()
         .force("x", d3.forceX(width).strength(0.01))
