@@ -1,0 +1,4 @@
+give each job a sector
+
+add x-axis and thats it
+add multi-select
